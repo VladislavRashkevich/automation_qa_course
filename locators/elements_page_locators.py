@@ -49,4 +49,22 @@ class WebTablePageLocators:
     SEARCH_INPUT = (By.CSS_SELECTOR, 'input[id="searchBox"]')
     DELETE_BUTTON = (By.CSS_SELECTOR, 'span[title="Delete"]')
     ROW_PARENT = './/ancestor::div[@class="rt-tr-group"]'
+    NO_ROWS_FOUND = (By.CSS_SELECTOR, "div[class='rt-noData']")
+    COUNT_ROW_LIST = (By.CSS_SELECTOR, 'select[aria-label="rows per page"]')
+
+    # update
+    UPDATE_BUTTON = (By.CSS_SELECTOR, 'span[title="Edit"]')
+
+
+class ButtonsPageLocators:
+
+    # buttons
+    DOUBLE_BUTTON = (By.CSS_SELECTOR, "button[id='doubleClickBtn']")
+    RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='rightClickBtn']")
+    CLICK_ME_BUTTON = (By.XPATH, "//div[3]/button")
+
+    # output
+    OUTPUT_DOUBLE_BUTTON = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
+    OUTPUT_RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
+    OUTPUT_CLICK_ME_BUTTON = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
 
