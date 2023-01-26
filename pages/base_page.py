@@ -47,3 +47,9 @@ class BasePage():
     def go_to_new_windows(self):
         new_window = self.driver.window_handles[1]
         self.driver.switch_to.window(new_window)
+
+    def go_to_alert(self):
+        return self.driver.switch_to.alert
+
+    def alert_is_present(self, timeout=5):
+        return wait(self.driver, timeout).until(EC.alert_is_present())
