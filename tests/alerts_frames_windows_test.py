@@ -1,5 +1,5 @@
 import time
-from pages.alerts_frames_windows_page import BrowserWindowsPage, AlertsPage, FramesPage, NestedFramesPage
+from pages.alerts_frames_windows_page import BrowserWindowsPage, AlertsPage, FramesPage, NestedFramesPage, ModalDialogsPage
 
 
 class TestAlertsFramesWindows:
@@ -64,6 +64,24 @@ class TestAlertsFramesWindows:
             assert parent_text == "Parent frame"
             assert child_text == "Child Iframe"
 
+    class TestModalDialogsPage:
+
+        def test_modal_small_dialog(self, driver):
+            modal_dialog = ModalDialogsPage(driver, 'https://demoqa.com/modal-dialogs')
+            modal_dialog.open()
+            title_res, text_res = modal_dialog.check_modal_small_dialog()
+            assert title_res == "Small Modal"
+            assert text_res == "This is a small modal. It has very less content"
+
+        def test_modal_large_dialog(self, driver):
+            modal_dialog = ModalDialogsPage(driver, 'https://demoqa.com/modal-dialogs')
+            modal_dialog.open()
+            title_res, len_text_res = modal_dialog.check_modal_large_dialog()
+            assert title_res == "Large Modal"
+            assert len_text_res == 574
+
+
+
 
 
 
@@ -77,3 +95,4 @@ class TestAlertsFramesWindows:
 # pytest -s -v tests/alerts_frames_windows_test.py::TestAlertsFramesWindows::TestAlertsPage::test_prompt_alert_box_appeared
 # pytest -s -v tests/alerts_frames_windows_test.py::TestAlertsFramesWindows::TestFramePage::test_frames
 # pytest -s -v tests/alerts_frames_windows_test.py::TestAlertsFramesWindows::TestNestedFramesPage::test_nested_frames
+# pytest -s -v tests/alerts_frames_windows_test.py::TestAlertsFramesWindows::TestModalDialogsPage::test_modal_small_dialog

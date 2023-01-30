@@ -1,6 +1,6 @@
 from selenium.common import TimeoutException
 from pages.base_page import BasePage
-from locators.alerts_frames_windows_page_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators, NestedFramesPageLocators
+from locators.alerts_frames_windows_page_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators, NestedFramesPageLocators, ModalDialogsPageLocators
 
 
 class BrowserWindowsPage(BasePage):
@@ -105,6 +105,24 @@ class NestedFramesPage(BasePage):
         child_text = self.element_is_present(self.locators.CHILD_TEXT).text
         return parent_text, child_text
 
+
+class ModalDialogsPage(BasePage):
+
+    locators = ModalDialogsPageLocators()
+
+    def check_modal_small_dialog(self):
+        self.element_is_visible(self.locators.SMALL_MODAL_BUTTON).click()
+        title_small = self.element_is_visible(self.locators.TITLE_SMALL_MODAL).text
+        text_small_modal = self.element_is_visible(self.locators.BODY_SMALL_MODAL).text
+        self.element_is_visible(self.locators.SMALL_MODAL_CLOSE_BUTTON).click()
+        return title_small, text_small_modal
+
+    def check_modal_large_dialog(self):
+        self.element_is_visible(self.locators.LARGE_MODAL_BUTTON).click()
+        title_large = self.element_is_visible(self.locators.TITLE_LARGE_MODAL).text
+        text_large_modal = self.element_is_visible(self.locators.BODY_LARGE_MODAL).text
+        self.element_is_visible(self.locators.LARGE_MODAL_CLOSE_BUTTON).click()
+        return title_large, len(text_large_modal)
 
 
 
