@@ -1,5 +1,5 @@
 import time
-from pages.alerts_frames_windows_page import BrowserWindowsPage, AlertsPage
+from pages.alerts_frames_windows_page import BrowserWindowsPage, AlertsPage, FramesPage, NestedFramesPage
 
 
 class TestAlertsFramesWindows:
@@ -45,6 +45,25 @@ class TestAlertsFramesWindows:
             text_result, input_string = alert_page.check_prompt_box_alert()
             assert text_result == f"You entered {input_string}"
 
+    class TestFramePage:
+
+        def test_frames(self, driver):
+            frame_page = FramesPage(driver, 'https://demoqa.com/frames')
+            frame_page.open()
+            result_frame1 = frame_page.check_frame('frame1')
+            result_frame2 = frame_page.check_frame('frame2')
+            assert result_frame1 == ['This is a sample page', '500px', '350px'], "The frame does not exist"
+            assert result_frame2 == ['This is a sample page', '100px', '100px'], "The frame does not exist"
+
+    class TestNestedFramesPage:
+
+        def test_nested_frames(self, driver):
+            nested_frame_page = NestedFramesPage(driver, 'https://demoqa.com/nestedframes')
+            nested_frame_page.open()
+            parent_text, child_text = nested_frame_page.check_nested_frame()
+            assert parent_text == "Parent frame"
+            assert child_text == "Child Iframe"
+
 
 
 
@@ -56,3 +75,5 @@ class TestAlertsFramesWindows:
 # pytest -s -v tests/alerts_frames_windows_test.py::TestAlertsFramesWindows::TestAlertsPage::test_alert_appear_after_five_sec
 # pytest -s -v tests/alerts_frames_windows_test.py::TestAlertsFramesWindows::TestAlertsPage::test_confirm_alert_appeared
 # pytest -s -v tests/alerts_frames_windows_test.py::TestAlertsFramesWindows::TestAlertsPage::test_prompt_alert_box_appeared
+# pytest -s -v tests/alerts_frames_windows_test.py::TestAlertsFramesWindows::TestFramePage::test_frames
+# pytest -s -v tests/alerts_frames_windows_test.py::TestAlertsFramesWindows::TestNestedFramesPage::test_nested_frames
