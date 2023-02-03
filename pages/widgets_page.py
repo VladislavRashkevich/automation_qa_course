@@ -4,7 +4,7 @@ import time
 from pages.base_page import BasePage
 from selenium.webdriver import Keys
 from selenium.webdriver.support.select import Select
-from locators.widgets_page_locators import AccordianPageLocators, AutoCompletePageLocators, DatePickerPageLocators, SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators
+from locators.widgets_page_locators import AccordianPageLocators, AutoCompletePageLocators, DatePickerPageLocators, SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators, MenuPageLocators
 from selenium.common import TimeoutException
 from generator.generator import generated_color, generated_date
 
@@ -189,6 +189,19 @@ class ToolTipsPage(BasePage):
         tool_tip_text_contrary = self.get_text_from_tool_tips(self.locators.CONTRARY_LINK, self.locators.TOOL_TIP_CONTRARY_LINK)
         tool_tip_text_section = self.get_text_from_tool_tips(self.locators.SECTION_LINK, self.locators.TOOL_TIP_SECTION_LINK)
         return tool_tip_text_button, tool_tip_text_field, tool_tip_text_contrary, tool_tip_text_section
+    
+
+class MenuPage(BasePage):
+
+    locators = MenuPageLocators()
+
+    def check_menu_title(self):
+        menu_elements = self.elements_are_present(self.locators.MENU_ITEM_LIST)
+        menu_title_list = []
+        for element in menu_elements:
+            self.action_move_to_element(element)
+            menu_title_list.append(element.text)
+        return menu_title_list
 
 
 

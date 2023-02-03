@@ -1,6 +1,6 @@
 
 
-from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, ToolTipsPage
+from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, ToolTipsPage, MenuPage
 
 
 class TestWidgets:
@@ -95,6 +95,15 @@ class TestWidgets:
             tool_tips = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
             tool_tips.open()
             button_text, field_text, contrary_text, section_text = tool_tips.check_tool_tips()
+            return button_text, field_text, contrary_text, section_text
+
+
+    class TestMenuPage:
+        def test_menu(self, driver):
+            menu_page = MenuPage(driver, "https://demoqa.com/menu")
+            menu_page.open()
+            menu_items_list = menu_page.check_menu_title()
+            assert menu_items_list == ['Main Item 1', 'Main Item 2', 'Sub Item', 'Sub Item', 'SUB SUB LIST »', 'Sub Sub Item 1', 'Sub Sub Item 2', 'Main Item 3']
 
 
 
@@ -107,6 +116,7 @@ class TestWidgets:
 # pytest -s -v tests/widgets_test.py::TestWidgets::TestProgressBarPage::test_progress_bar
 # pytest -s -v tests/widgets_test.py::TestWidgets::TestTabsPage::test_tabs
 # pytest -s -v tests/widgets_test.py::TestWidgets::TestToolTipsPage::test_tool_tips
+# pytest -s -v tests/widgets_test.py::TestWidgets::TestMenuPage::test_menu
 
 
 
