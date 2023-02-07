@@ -1,5 +1,5 @@
 import random
-from data.data import Person, Color, Date
+from data.data import Person, Color, Date, SelectValue
 from faker import Faker
 
 faker_ru = Faker('ru_RU')
@@ -53,4 +53,15 @@ def generated_date():
         month=faker_en.month_name(),
         day=faker_en.day_of_month(),
         time="12:00",
+    )
+
+
+def generate_select_menu_value():
+    yield SelectValue(
+        list_values=['Group 1, option 1',
+                      'Group 1, option 2',
+                      'Group 2, option 1',
+                      'Group 2, option 2',
+                      'A root option',
+                      'Another root option']
     )

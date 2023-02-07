@@ -3,10 +3,11 @@ import time
 
 from pages.base_page import BasePage
 from selenium.webdriver import Keys
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-from locators.widgets_page_locators import AccordianPageLocators, AutoCompletePageLocators, DatePickerPageLocators, SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators, MenuPageLocators
+from locators.widgets_page_locators import AccordianPageLocators, AutoCompletePageLocators, DatePickerPageLocators, SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators, MenuPageLocators, SelectMenuPageLocators
 from selenium.common import TimeoutException
-from generator.generator import generated_color, generated_date
+from generator.generator import generated_color, generated_date, generate_select_menu_value
 
 
 class AccordianPage(BasePage):
@@ -202,6 +203,85 @@ class MenuPage(BasePage):
             self.action_move_to_element(element)
             menu_title_list.append(element.text)
         return menu_title_list
+
+class SelectMenuPage(BasePage):
+    locators = SelectMenuPageLocators()
+
+    def check_select_value(self):
+        input_values = next(generate_select_menu_value()).list_values
+        data = []
+        for value in input_values:
+            select_input = self.element_is_present(self.locators.SELECT_VALUE_FIELD_INPUT)
+            select_input.send_keys(value)
+            select_input.send_keys(Keys.ENTER)
+            text_output = self.element_is_present(self.locators.SELECT_VALUE_FIELD_OUTPUT).text
+            data.append(text_output)
+        return input_values, data
+
+    def check_select_one_menu(self):
+        menu_val = random.choice(['Other', 'Prof.', 'Mrs.', 'Mr.', 'Mr.', 'Dr.'])
+
+        input_field = self.element_is_present(self.locators.SELECT_ONE_MENU_INPUT)
+        input_field.send_keys(menu_val)
+        input_field.send_keys(Keys.ENTER)
+        output_val = self.element_is_present(self.locators.SELECT_ONE_MENU_OUTPUT).text
+        return [menu_val, output_val]
+
+    def check_old_select_menu(self):
+        elem = self.element_is_present(self.locators.OLD_SELECT_MENU)
+        value_data_before = elem.get_attribute('value')
+        select = Select(elem)
+        select.select_by_value(str(random.randint(1, 10)))
+        value_data_after = elem.get_attribute('value')
+        return value_data_before, value_data_after
+
+
+    def check_multiselect_drop_down(self):
+        values = ["Green", "Blue", "Black", "Red"]
+        colors = random.sample(values, k=random.randint(1, 3))
+        for color in colors:
+            input_field = self.element_is_visible(self.locators.MULTISELECT_INPUT)
+            input_field.send_keys(color)
+            input_field.send_keys(Keys.ENTER)
+
+        checked_colors_list = self.elements_are_visible(self.locators.MULTISELECT_COLORS_CHECKED_LIST)
+        data = []
+        for elem in checked_colors_list:
+            data.append(elem.text)
+        return colors, data
+
+    def check_delete_button_in_multiselect(self):
+        values = ["Green", "Blue", "Black", "Red"]
+        colors = random.sample(values, k=random.randint(1, 4))
+        for color in colors:
+            input_field = self.element_is_visible(self.locators.MULTISELECT_INPUT)
+            input_field.send_keys(color)
+            input_field.send_keys(Keys.ENTER)
+
+        multiselect_container = self.elements_are_present(self.locators.CONTAINERS_FOR_SELECT)[2]
+        delete_button = multiselect_container.find_elements(*self.locators.INDICATOR_FOR_TEARDOWN_LIST)[-2]
+        delete_button.click()
+        try:
+            len_checked_colors_list_after = len(self.elements_are_invisible(self.locators.MULTISELECT_COLORS_CHECKED_LIST))
+        except TimeoutException:
+            return 0
+
+        return len_checked_colors_list_after
+
+
+
+    def check_standard_multi_select(self):
+        elem = self.element_is_present(self.locators.STANDARD_MULTI_SELECT)
+        value_data_before = elem.get_attribute('value')
+        select = Select(elem)
+        select.select_by_index(random.randint(0, 3))
+        value_data_after = elem.get_attribute('value')
+        return value_data_before, value_data_after
+
+
+
+
+
 
 
 

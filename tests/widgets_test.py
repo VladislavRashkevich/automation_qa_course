@@ -1,6 +1,6 @@
 
 
-from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, ToolTipsPage, MenuPage
+from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, ToolTipsPage, MenuPage, SelectMenuPage
 
 
 class TestWidgets:
@@ -105,7 +105,43 @@ class TestWidgets:
             menu_items_list = menu_page.check_menu_title()
             assert menu_items_list == ['Main Item 1', 'Main Item 2', 'Sub Item', 'Sub Item', 'SUB SUB LIST »', 'Sub Sub Item 1', 'Sub Sub Item 2', 'Main Item 3']
 
+    class TestSelectMenuPage:
+        def test_select_menu(self, driver):
+            select_menu_page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            select_menu_page.open()
+            input_values, output_values = select_menu_page.check_select_value()
+            assert input_values == output_values, "All items in select menu was not presented"
 
+        def test_select_one_menu(self, driver):
+            select_menu_page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            select_menu_page.open()
+            res = select_menu_page.check_select_one_menu()
+            assert res[0] == res[1], "Title menu has not been checked"
+
+        def test_old_style_select_menu(self, driver):
+            select_menu_page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            select_menu_page.open()
+            value_data_before, value_data_after = select_menu_page.check_old_select_menu()
+            assert value_data_before != value_data_after, "Select has not chanced"
+
+        def test_multiselect_dropdown(self, driver):
+            select_menu_page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            select_menu_page.open()
+            res = select_menu_page.check_multiselect_drop_down()
+            assert res[0] == res[1], "Title has not selected"
+
+        def test_multiselect_deleted(self, driver):
+            select_menu_page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            select_menu_page.open()
+            res = select_menu_page.check_delete_button_in_multiselect()
+            assert res == 0, "Selected colors were not deleted"
+
+
+        def test_standard_multi_select(self, driver):
+            select_menu_page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            select_menu_page.open()
+            value_data_before, value_data_after = select_menu_page.check_standard_multi_select()
+            assert value_data_before != value_data_after, "Title menu has not been checked"
 
 
 # pytest -s -v tests/widgets_test.py::TestWidgets::TestAccordianPage::test_accordian_page
@@ -117,6 +153,7 @@ class TestWidgets:
 # pytest -s -v tests/widgets_test.py::TestWidgets::TestTabsPage::test_tabs
 # pytest -s -v tests/widgets_test.py::TestWidgets::TestToolTipsPage::test_tool_tips
 # pytest -s -v tests/widgets_test.py::TestWidgets::TestMenuPage::test_menu
+# pytest -s -v tests/widgets_test.py::TestWidgets::TestSelectMenuPage::test_select_menu
 
 
 

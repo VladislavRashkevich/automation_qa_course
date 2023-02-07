@@ -72,6 +72,22 @@ class MenuPageLocators:
     MENU_ITEM_LIST = (By.CSS_SELECTOR, 'ul[id="nav"] li a')
 
 
+class SelectMenuPageLocators:
+    SELECT_VALUE_FIELD_INPUT = (By.CSS_SELECTOR, 'input[id="react-select-2-input"]')
+    SELECT_VALUE_FIELD_OUTPUT = (By.CSS_SELECTOR, 'div[id="withOptGroup"] div[class=" css-1uccc91-singleValue"]')
+
+    SELECT_ONE_MENU_INPUT = (By.CSS_SELECTOR, 'input[id="react-select-3-input"]')
+    SELECT_ONE_MENU_OUTPUT = (By.CSS_SELECTOR, 'div[id="selectOne"] div[class=" css-1uccc91-singleValue"]')
+
+    OLD_SELECT_MENU = (By.CSS_SELECTOR, 'select[id="oldSelectMenu"]')
+
+    MULTISELECT_INPUT = (By.CSS_SELECTOR, 'input[id="react-select-4-input"]')
+    MULTISELECT_COLORS_CHECKED_LIST = (By.CSS_SELECTOR, 'div[class = "css-1rhbuit-multiValue"]')
+    CONTAINERS_FOR_SELECT = (By.CSS_SELECTOR, 'div[class=" css-2b097c-container"]')
+    INDICATOR_FOR_TEARDOWN_LIST = (By.CSS_SELECTOR, 'svg[class="css-19bqh2r"]')
+
+    STANDARD_MULTI_SELECT = (By.CSS_SELECTOR, 'select[id="cars"]')
+
 
 
 

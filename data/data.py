@@ -26,3 +26,7 @@ class Date:
     month: str = None
     year: str = None
     time: str = None
+
+@dataclass()
+class SelectValue:
+    list_values: list = None
