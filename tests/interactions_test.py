@@ -1,4 +1,4 @@
-from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage
+from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage, DraggablePage
 
 class TestInteractions:
     class TestSortablePage:
@@ -62,6 +62,29 @@ class TestInteractions:
             after_move, last_position = droppable_page.drop_not_revert_draggable()
             assert will_after_move != will_after_revert, "Element has not reverted"
             assert after_move == last_position, "Element has not fixed"
+
+    class TestDraggablePage:
+        def test_simple_draggable(self, driver):
+            draggable_page = DraggablePage(driver, "https://demoqa.com/dragabble")
+            draggable_page.open()
+            first_pos, sec_pos = draggable_page.drop_simple()
+            assert first_pos != sec_pos, "The element was not dragged"
+
+        def test_axis_restricted(self, driver):
+            draggable_page = DraggablePage(driver, "https://demoqa.com/dragabble")
+            draggable_page.open()
+            x_elem_x_first, x_elem_y_first, x_elem_x_last, x_elem_y_last = draggable_page.drop_axis_restricted('x')
+            y_elem_x_first, y_elem_y_first, y_elem_x_last, y_elem_y_last = draggable_page.drop_axis_restricted('y')
+            assert x_elem_x_first != x_elem_x_last and x_elem_y_first == x_elem_y_last, "In element Only_X changed axist Y"
+            assert y_elem_x_first == y_elem_x_last and y_elem_y_first != y_elem_y_last, "In element Only_Y changed axist X"
+
+        def test_container_restricted(self, driver):
+            draggable_page = DraggablePage(driver, "https://demoqa.com/dragabble")
+            draggable_page.open()
+            container_box_coord = draggable_page.dragging_container_within_container()
+            elem_to_parent_coord = draggable_page.dragging_element_withing_parent()
+            assert container_box_coord == ("415px", "106px", "0px", "0px" ), "an element outside the container"
+            assert elem_to_parent_coord == ('13px', '86px', '0px', '-1px'), "an element outside the parent"
 
 
 

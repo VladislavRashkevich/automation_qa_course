@@ -2,7 +2,7 @@ import random
 import time
 
 from pages.base_page import BasePage
-from locators.interactions_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators, DroppablePageLocators
+from locators.interactions_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators, DroppablePageLocators, DraggablePageLocators
 
 
 class SortablePage(BasePage):
@@ -138,6 +138,63 @@ class DroppablePage(BasePage):
         last_position = not_revert.get_attribute('style')
         return position_after_move, last_position
 
+
+class DraggablePage(BasePage):
+    locators = DraggablePageLocators()
+
+    def _action_drug_and_drop_by_random_offset(self, element, max_pixel_to_move=300):
+        x_coords = random.randint(1, max_pixel_to_move)
+        y_coords = random.randint(1, max_pixel_to_move)
+        self.action_drug_and_drop_by_offset(element, x_coords, y_coords)
+
+    def _get_x_and_y_cord_in_px(self, element):
+        coords = element.get_attribute('style')
+        if len(coords.split(";")) <= 2:
+            x_cor = "0px"
+            y_cor = "0px"
+        else:
+            x_cor = coords.replace(" ", "").split(";")[1].split(":")[1]
+            y_cor = coords.replace(" ", "").split(";")[2].split(":")[1]
+        return x_cor, y_cor
+
+
+    def drop_simple(self):
+        self.element_is_visible(self.locators.SIMPLE_TAB).click()
+        drag_element = self.element_is_visible(self.locators.DRAG_ME_SIMPLE)
+        first_position = drag_element.get_attribute('style')
+        self._action_drug_and_drop_by_random_offset(drag_element)
+        last_position = drag_element.get_attribute('style')
+        return first_position, last_position
+
+    def drop_axis_restricted(self, x_or_y="x"):
+        self.element_is_visible(self.locators.AXIS_RESTRICTED_TAB).click()
+
+        element_x_or_y = {
+            "x": self.locators.ONLY_X,
+            "y": self.locators.ONLY_Y
+        }
+        elem_axis = self.element_is_visible(element_x_or_y[x_or_y.lower()])
+        first_left, first_top = self._get_x_and_y_cord_in_px(elem_axis)
+        self._action_drug_and_drop_by_random_offset(elem_axis)
+        last_left, last_top = self._get_x_and_y_cord_in_px(elem_axis)
+        return first_left, first_top, last_left, last_top
+
+    def dragging_container_within_container(self):
+        self.element_is_visible(self.locators.CONTAINER_RESTRICTED_TAB).click()
+        box_in_container = self.element_is_clickable(self.locators.ELEMENT_CONTAINED_BOX)
+        self.action_drug_and_drop_by_offset(box_in_container, 450, 115)
+        x_coor_max, y_coor_max = self._get_x_and_y_cord_in_px(box_in_container)
+        self.action_drug_and_drop_by_offset(box_in_container, -450, -150)
+        x_coor_min, y_coor_min = self._get_x_and_y_cord_in_px(box_in_container)
+        return x_coor_max, y_coor_max, x_coor_min, y_coor_min
+
+    def dragging_element_withing_parent(self):
+        element_in_parent = self.element_is_visible(self.locators.ELEMENT_CONTAINED_PARENT)
+        self.action_drug_and_drop_by_offset(element_in_parent, 50, 115)
+        elem_x_coor_max, elem_y_coor_max = self._get_x_and_y_cord_in_px(element_in_parent)
+        self.action_drug_and_drop_by_offset(element_in_parent, -100, -100)
+        elem_x_coor_min, elem_y_coor_min = self._get_x_and_y_cord_in_px(element_in_parent)
+        return elem_x_coor_max, elem_y_coor_max, elem_x_coor_min, elem_y_coor_min
 
 
 
