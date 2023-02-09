@@ -1,6 +1,8 @@
 import random
+import time
+
 from pages.base_page import BasePage
-from locators.interactions_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators
+from locators.interactions_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators, DroppablePageLocators
 
 
 class SortablePage(BasePage):
@@ -80,6 +82,61 @@ class ResizablePage(BasePage):
         min_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.RESIZABLE))
         return max_size, min_size
 
+
+class DroppablePage(BasePage):
+    locators = DroppablePageLocators()
+
+    def drop_simple(self):
+        self.element_is_visible(self.locators.SIMPLE_TAB).click()
+        drag_div = self.element_is_visible(self.locators.DRAG_ME_SIMPLE)
+        drop_div = self.element_is_visible(self.locators.DROP_HERE_SIMPLE)
+        self.action_drug_and_drop_to_element(drag_div, drop_div)
+        return drop_div.text
+
+    def drop_accept(self):
+        self.element_is_visible(self.locators.ACCEPT_TAB).click()
+        acceptable_div = self.element_is_visible(self.locators.ACCEPTABLE)
+        not_acceptable_div = self.element_is_visible(self.locators.NOT_ACCEPTABLE)
+        drop_div = self.element_is_visible(self.locators.DROP_HERE_ACCEPT)
+        self.action_drug_and_drop_to_element(not_acceptable_div, drop_div)
+        drop_text_not_accept = drop_div.text
+        self.action_drug_and_drop_to_element(acceptable_div, drop_div)
+        drop_text_accept = drop_div.text
+        return drop_text_not_accept, drop_text_accept
+
+    def drop_prevent_propogation(self):
+        self.element_is_visible(self.locators.PREVENT_PROPOGATION_TAB).click()
+        drag_div = self.element_is_visible(self.locators.DRAG_ME_PREVENT)
+        not_greedy_inner_box = self.element_is_visible(self.locators.NOT_GREEDY_INNER_BOX)
+        greedy_inner_box = self.element_is_visible(self.locators.GREEDY_INNER_BOX)
+        self.action_drug_and_drop_to_element(drag_div, not_greedy_inner_box)
+        text_not_greedy_box = self.element_is_visible(self.locators.NOT_GREEDY_DROP_BOX_TEXT).text
+        text_not_greedy_inner_box = not_greedy_inner_box.text
+        self.action_drug_and_drop_to_element(drag_div, greedy_inner_box)
+        text_greedy_box = self.element_is_visible(self.locators.GREEDY_DROP_BOX_TEXT).text
+        text_greedy_inner_box = greedy_inner_box.text
+        return text_not_greedy_box, text_not_greedy_inner_box, text_greedy_box, text_greedy_inner_box
+
+
+    def drop_revert_draggable(self):
+        self.element_is_visible(self.locators.REVERT_DRAGGABLE_TAB).click()
+        will_revert = self.element_is_visible(self.locators.WILL_REVERT)
+        drop_div = self.element_is_visible(self.locators.DROP_HERE_REVERT)
+        self.action_drug_and_drop_to_element(will_revert, drop_div)
+        position_after_move = will_revert.get_attribute('style')
+        time.sleep(1)
+        position_after_revert = will_revert.get_attribute('style')
+        return position_after_move, position_after_revert
+
+    def drop_not_revert_draggable(self):
+        self.element_is_visible(self.locators.REVERT_DRAGGABLE_TAB).click()
+        not_revert = self.element_is_visible(self.locators.NOT_REVERT)
+        drop_div = self.element_is_visible(self.locators.DROP_HERE_REVERT)
+        self.action_drug_and_drop_to_element(not_revert, drop_div)
+        position_after_move = not_revert.get_attribute('style')
+        time.sleep(1)
+        last_position = not_revert.get_attribute('style')
+        return position_after_move, last_position
 
 
 
